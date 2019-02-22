@@ -31,7 +31,7 @@ def add_extras(cfg, i, size=300):
     layers = []
     in_channels = i
     flag = False
-    for k, v in enumerate(cfg):
+    for k, v in enumerate(cfg):  #[256, 'S', 512, 128, 'S', 256, 128, 256, 128, 256]
         if in_channels != 'S':
             if v == 'S':
                 layers += [nn.Conv2d(in_channels, cfg[k + 1], kernel_size=(1, 3)[flag], stride=2, padding=1)]

@@ -85,16 +85,22 @@ def assign_priors(gt_boxes, gt_labels, corner_form_priors,
     """
     # size: num_priors x num_targets
     ious = iou_of(gt_boxes.unsqueeze(0), corner_form_priors.unsqueeze(1))
-    # size: num_priors
-    best_target_per_prior, best_target_per_prior_index = ious.max(1)
-    # size: num_targets
-    best_prior_per_target, best_prior_per_target_index = ious.max(0)
 
+    # size: num_priors
+    # this calculate the best target each prior anchor box matches
+    best_target_per_prior, best_target_per_prior_index = ious.max(1)
+
+    # size: num_targets
+    # this calculate the best prior anchor box each target matches
+    best_prior_per_target, best_prior_per_target_index = ious.max(0)
     for target_index, prior_index in enumerate(best_prior_per_target_index):
         best_target_per_prior_index[prior_index] = target_index
+
     # 2.0 is used to make sure every target has a prior assigned
     best_target_per_prior.index_fill_(0, best_prior_per_target_index, 2)
+
     # size: num_priors
+    # calculate which ground truth category and box the prior anchor box should learn
     labels = gt_labels[best_target_per_prior_index]
     labels[best_target_per_prior < iou_threshold] = 0  # the backgournd id
     boxes = gt_boxes[best_target_per_prior_index]

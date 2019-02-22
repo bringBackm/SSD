@@ -59,6 +59,26 @@ class SSD(nn.Module):
             if k % 2 == 1:
                 sources.append(x)
 
+        #print(self.regression_headers)
+        #print(self.classification_headers)
+        '''
+        ModuleList(
+          (0): Conv2d(512, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (1): Conv2d(1024, 24, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (2): Conv2d(512, 24, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (3): Conv2d(256, 24, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (4): Conv2d(256, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (5): Conv2d(256, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        )
+        ModuleList(
+          (0): Conv2d(512, 84, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (1): Conv2d(1024, 126, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (2): Conv2d(512, 126, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (3): Conv2d(256, 126, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (4): Conv2d(256, 84, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (5): Conv2d(256, 84, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        )
+        '''
         for (x, l, c) in zip(sources, self.regression_headers, self.classification_headers):
             locations.append(l(x).permute(0, 2, 3, 1).contiguous())
             confidences.append(c(x).permute(0, 2, 3, 1).contiguous())
@@ -73,6 +93,17 @@ class SSD(nn.Module):
             # when evaluating, decode predictions
             if self.priors is None:
                 self.priors = PriorBox(self.cfg)().to(locations.device)
+            # print(self.priors)
+            '''
+            x , y, width, height
+            tensor([[0.0133, 0.0133, 0.1000, 0.1000],
+            [0.0133, 0.0133, 0.1414, 0.1414],
+            [0.0133, 0.0133, 0.1414, 0.0707],
+            ...,
+            [0.5000, 0.5000, 0.9612, 0.9612],
+            [0.5000, 0.5000, 1.0000, 0.6223],
+            [0.5000, 0.5000, 0.6223, 1.0000]], device='cuda:0')
+            '''
             confidences = F.softmax(confidences, dim=2)
             boxes = box_utils.convert_locations_to_boxes(
                 locations, self.priors, self.cfg.MODEL.CENTER_VARIANCE, self.cfg.MODEL.SIZE_VARIANCE

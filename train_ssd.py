@@ -58,6 +58,7 @@ def train(cfg, args):
     # -----------------------------------------------------------------------------
     train_transform = TrainAugmentation(cfg.INPUT.IMAGE_SIZE, cfg.INPUT.PIXEL_MEAN)
     target_transform = MatchPrior(PriorBox(cfg)(), cfg.MODEL.CENTER_VARIANCE, cfg.MODEL.SIZE_VARIANCE, cfg.MODEL.THRESHOLD)
+    print(cfg.DATASETS.TRAIN)
     train_dataset = build_dataset(dataset_list=cfg.DATASETS.TRAIN, transform=train_transform, target_transform=target_transform)
     logger.info("Train dataset size: {}".format(len(train_dataset)))
     if args.distributed:
@@ -75,13 +76,13 @@ def main():
     parser = argparse.ArgumentParser(description='Single Shot MultiBox Detector Training With PyTorch')
     parser.add_argument(
         "--config-file",
-        default="",
+        default="configs/ssd300_voc0712.yaml",
         metavar="FILE",
         help="path to config file",
         type=str,
     )
     parser.add_argument("--local_rank", type=int, default=0)
-    parser.add_argument('--vgg', help='Pre-trained vgg model path, download from https://s3.amazonaws.com/amdegroot-models/vgg16_reducedfc.pth')
+    parser.add_argument('--vgg', default='weights/vgg16_reducedfc.pth' ,help='Pre-trained vgg model path, download from https://s3.amazonaws.com/amdegroot-models/vgg16_reducedfc.pth')
     parser.add_argument('--resume', default=None, type=str, help='Checkpoint state_dict file to resume training from')
     parser.add_argument('--log_step', default=50, type=int, help='Print logs every log_step')
     parser.add_argument('--save_step', default=5000, type=int, help='Save checkpoint every save_step')

@@ -13,11 +13,11 @@ class DatasetCatalog:
             "split": "val"
         },
         'voc_2007_trainval': {
-            "data_dir": "VOC2007",
+            "data_dir": "/media/ros/0D1416760D141676/Documents/voc/voc_2007_trainval/VOC2007",
             "split": "trainval"
         },
         'voc_2007_test': {
-            "data_dir": "VOC2007",
+            "data_dir": "/media/ros/0D1416760D141676/Documents/voc/voc_2007_test/VOC2007",
             "split": "test"
         },
         'voc_2012_train': {
@@ -29,7 +29,7 @@ class DatasetCatalog:
             "split": "val"
         },
         'voc_2012_trainval': {
-            "data_dir": "VOC2012",
+            "data_dir": "/media/ros/0D1416760D141676/Documents/voc/voc_2012_trainval/VOC2012",
             "split": "trainval"
         },
         'voc_2012_test': {

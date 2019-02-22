@@ -28,13 +28,13 @@ def main():
     parser = argparse.ArgumentParser(description='SSD Evaluation on VOC and COCO dataset.')
     parser.add_argument(
         "--config-file",
-        default="",
+        default="configs/ssd300_voc0712.yaml",
         metavar="FILE",
         help="path to config file",
         type=str,
     )
     parser.add_argument("--local_rank", type=int, default=0)
-    parser.add_argument("--weights", type=str, help="Trained weights.")
+    parser.add_argument("--weights", default="weights/ssd300_voc0712_mAP77.83.pth" ,type=str, help="Trained weights.")
     parser.add_argument("--output_dir", default="eval_results", type=str, help="The directory to store evaluation results.")
 
     parser.add_argument(
@@ -65,10 +65,10 @@ def main():
     logger.info(args)
 
     logger.info("Loaded configuration file {}".format(args.config_file))
-    with open(args.config_file, "r") as cf:
-        config_str = "\n" + cf.read()
-        logger.info(config_str)
-    logger.info("Running with config:\n{}".format(cfg))
+    #with open(args.config_file, "r") as cf:
+    #    config_str = "\n" + cf.read()
+    #    logger.info(config_str)
+    #logger.info("Running with config:\n{}".format(cfg))
     evaluation(cfg, weights_file=args.weights, output_dir=args.output_dir, distributed=distributed)
 
 

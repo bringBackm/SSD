@@ -53,12 +53,12 @@ def main():
     parser = argparse.ArgumentParser(description="SSD Demo.")
     parser.add_argument(
         "--config-file",
-        default="",
+        default="configs/ssd300_voc0712.yaml",
         metavar="FILE",
         help="path to config file",
         type=str,
     )
-    parser.add_argument("--weights", type=str, help="Trained weights.")
+    parser.add_argument("--weights", default='weights/ssd300_voc0712_mAP77.83.pth',type=str, help="Trained weights.")
     parser.add_argument("--iou_threshold", type=float, default=0.5)
     parser.add_argument("--score_threshold", type=float, default=0.5)
     parser.add_argument("--images_dir", default='demo', type=str, help='Specify a image dir to do prediction.')
@@ -79,10 +79,10 @@ def main():
     cfg.freeze()
 
     print("Loaded configuration file {}".format(args.config_file))
-    with open(args.config_file, "r") as cf:
-        config_str = "\n" + cf.read()
-        print(config_str)
-    print("Running with config:\n{}".format(cfg))
+    #with open(args.config_file, "r") as cf:
+    #    config_str = "\n" + cf.read()
+    #    print(config_str)
+    #print("Running with config:\n{}".format(cfg))
 
     run_demo(cfg=cfg,
              weights_file=args.weights,

@@ -78,6 +78,7 @@ def do_evaluation(cfg, model, output_dir, distributed):
     if isinstance(model, torch.nn.parallel.DistributedDataParallel):
         model = model.module
     assert isinstance(model, SSD), 'Wrong module.'
+    print(cfg.DATASETS.TEST)
     test_datasets = build_dataset(dataset_list=cfg.DATASETS.TEST, is_test=True)
     device = torch.device(cfg.MODEL.DEVICE)
     model.eval()
@@ -89,9 +90,6 @@ def do_evaluation(cfg, model, output_dir, distributed):
     # evaluate all test datasets.
     logger = logging.getLogger("SSD.inference")
     logger.info('Will evaluate {} dataset(s):'.format(len(test_datasets)))
-    metrics = {}
     for dataset_name, test_dataset in zip(cfg.DATASETS.TEST, test_datasets):
-        metric = _evaluation(cfg, dataset_name, test_dataset, predictor, distributed, output_dir)
-        metrics[dataset_name] = metric
+        _evaluation(cfg, dataset_name, test_dataset, predictor, distributed, output_dir)
         distributed_util.synchronize()
-    return metrics

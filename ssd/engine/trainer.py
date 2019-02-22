@@ -108,19 +108,16 @@ def do_train(cfg, model,
         if save_to_disk and iteration % args.save_step == 0:
             model_path = os.path.join(cfg.OUTPUT_DIR, "ssd{}_vgg_iteration_{:06d}.pth".format(cfg.INPUT.IMAGE_SIZE, iteration))
             _save_model(logger, model, model_path)
+
         # Do eval when training, to trace the mAP changes and see performance improved whether or nor
         if args.eval_step > 0 and iteration % args.eval_step == 0 and not iteration == max_iter:
-            dataset_metrics = do_evaluation(cfg, model, cfg.OUTPUT_DIR, distributed=args.distributed)
-            if summary_writer:
-                global_step = iteration
-                for dataset_name, metrics in dataset_metrics.items():
-                    for metric_name, metric_value in metrics.get_printable_metrics().items():
-                        summary_writer.add_scalar('/'.join(['val', dataset_name, metric_name]), metric_value, global_step=global_step)
+            do_evaluation(cfg, model, cfg.OUTPUT_DIR, distributed=args.distributed)
             model.train()
 
     if save_to_disk:
         model_path = os.path.join(cfg.OUTPUT_DIR, "ssd{}_vgg_final.pth".format(cfg.INPUT.IMAGE_SIZE))
         _save_model(logger, model, model_path)
+
     # compute training time
     total_training_time = int(time.time() - start_training_time)
     total_time_str = str(datetime.timedelta(seconds=total_training_time))

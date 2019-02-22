@@ -23,7 +23,8 @@ class Predictor:
         images = image.unsqueeze(0)
         images = images.to(self.device)
         with torch.no_grad():
-            scores, boxes = self.model(images)
+            # [1, 8732, 4] shape of boxes
+            scores, boxes = self.model(images)  # the SSD model will output the x, y, width, height parameters for all default boxes
         results = self.post_processor(scores, boxes, width=width, height=height)
         boxes, labels, scores = results[0]
         return boxes, labels, scores
