@@ -25,6 +25,12 @@ class PriorBox(nn.Module):
                     are relative to the image size.
         """
         priors = []
+        # print(self.feature_maps)
+        # 38, 19, 10, 5, 3, 1
+        # print(self.strides)
+        # [8, 16, 32, 64, 100, 300]
+
+        # generate default boxes on every size of feature map
         for k, f in enumerate(self.feature_maps):
             scale = self.image_size / self.strides[k]
             for i, j in product(range(f), repeat=2):
